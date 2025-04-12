@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ishq Wali Website ❤️</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #mainContent {
+      padding: 20px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      max-width: 90%;
+      text-align: center;
+    }
+
+    #question {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      font-size: 18px;
+      margin: 15px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #yesBtn { background: #28a745; color: white; }
+    #noBtn { background: #dc3545; color: white; position: relative; }
+
+    .btn:hover { transform: scale(1.1); }
+
+    #finalMessage {
+      font-size: 26px;
+      font-weight: bold;
+      color: #e60073;
+      display: none;
+      animation: pop 0.5s ease forwards;
+      text-align: center;
+      padding: 20px;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .shake {
+      animation: shake 0.3s infinite;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    #percentageProgress {
+      font-size: 24px;
+      color: #e60073;
+      margin-top: 10px;
+      display: none;
+    }
+
+    #heartSymbol {
+      font-size: 30px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="clickSound" src="img/click.mp3" preload="auto"></audio>
+
+  <div id="mainContent">
+    <div id="question">kya tum momos khane chlogi mere sath? 🥟</div>
+    <button id="yesBtn" class="btn">Yes</button>
+    <button id="noBtn" class="btn">No</button>
+    <div id="heartSymbol">❤️</div>
+    <div id="percentageProgress">0%</div>
+  </div>
+
+  <div id="finalMessage"></div>
+
+  <script>
+    const questions = [
+      "kya tum momos khane chlogi mere sath? 🥟",
+      "kyu momo ache nhi lagte tujhe? 😤",
+      "acha aloo namak khake mood theek ho jayega? 🥔",
+      "movie dekhne chlte hai romatic wali? 🎬❤️",
+      "tum mujhse pyar nhi krti? 💔",
+      "narazgi hai to sorry janu 😘",
+      "i love you na 💌",
+      "maaf krde yrr 😢",
+      "chlo khi ghumne chle? 🚗🌄",
+      "please man jao yrr 🙏",
+      "Dadi ama dadi ama man jao 😂",
+      "janu man jao 🥺",
+      "bhoru oye Didiw 🤪"
+    ];
+
+    const percentages = [1, 6, 32, 36, 38, 69, 88, 99, 100];
+
+    let current = 0;
+    let noClickCount = 0;
+    let didiwClickCount = 0;
+
+    const questionEl = document.getElementById("question");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const clickSound = document.getElementById("clickSound");
+    const finalMessage = document.getElementById("finalMessage");
+    const percentageProgress = document.getElementById("percentageProgress");
+    const heartSymbol = document.getElementById("heartSymbol");
+
+    yesBtn.addEventListener("click", () => {
+      clickSound.play();
+
+      if (current === 12) {
+        // Final click on Didiw
+        if (didiwClickCount < percentages.length) {
+          percentageProgress.innerText = `${percentages[didiwClickCount]}%`;
+          didiwClickCount++;
+          if (percentages[didiwClickCount - 1] === 100) {
+            setTimeout(() => {
+              showFinal("shukar hai tu man gyi wrna aaj to css java python puri sikha deti teri yeh narazgi 😪 sorry yrr tujhe tang kiya per meri mehnat ko appreciate jrur krna ❤️ aur haan.....didiw.");
+            }, 500);
+          }
+        }
+      } else {
+        showFinal("I knew tu nahi reh sakti mujhse naraz 💌");
+      }
+    });
+
+    noBtn.addEventListener("click", () => {
+      clickSound.play();
+
+      if (current === 1) {
+        noClickCount++;
+        moveNoButtonCrazy();
+        if (noClickCount >= 5) {
+          nextQuestion();
+        }
+        return;
+      }
+
+      if (current === 12) {
+        noClickCount++;
+        moveNoButtonCrazy();
+        if (noClickCount >= 10) {
+          noBtn.style.display = "none";
+          yesBtn.innerText = "Didiw";
+          heartSymbol.style.display = "block";
+          percentageProgress.style.display = "block";
+        }
+        return;
+      }
+
+      nextQuestion();
+    });
+
+    function nextQuestion() {
+      current++;
+      noClickCount = 0;
+      if (current < questions.length) {
+        questionEl.innerText = questions[current];
+        yesBtn.innerText = current === 12 ? "Didiw" : "Yes";
+        resetNoBtn();
+      }
+    }
+
+    function moveNoButtonCrazy() {
+      const x = Math.random() * 300 - 150;
+      const y = Math.random() * 300 - 150;
+      noBtn.style.position = "relative";
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+      noBtn.classList.add("shake");
+    }
+
+    function resetNoBtn() {
+      noBtn.style.left = "0px";
+      noBtn.style.top = "0px";
+      noBtn.classList.remove("shake");
+      noBtn.style.display = "inline-block";
+    }
+
+    function showFinal(message) {
+      document.getElementById("mainContent").style.display = "none";
+      finalMessage.style.display = "block";
+      finalMessage.innerText = message;
+    }
+  </script>
+</body>
+</html>
